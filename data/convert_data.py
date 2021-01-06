@@ -16,7 +16,9 @@ for name in file_names:
 result = {}
 
 for key,value in data.items():
-    current_month = int(value[0]['Date'].split(' ')[0].split('/')[0])
+    current_date = value[0]['Date'].split(' ')[0].split('/')
+    date = f'{current_date[0]}/{current_date[2]}'
+    current_month = int(current_date[0])
     week_buffer = 0
     i = 0
     last_price = None
@@ -29,7 +31,7 @@ for key,value in data.items():
             i = 0
             if last_price != None:
                 changes = round(((new_price - last_price) / last_price) * 100, 1)
-                ticker_data.append(changes)
+                ticker_data.append({'date': date, 'changes':changes})
             last_price = new_price
         week_buffer += float(data_point['Close'])
         i += 1
