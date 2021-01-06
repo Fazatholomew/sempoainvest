@@ -17,15 +17,17 @@ result = {}
 
 for key,value in data.items():
     current_date = value[0]['Date'].split(' ')[0].split('/')
-    date = f'{current_date[0]}/{current_date[2]}'
     current_month = int(current_date[0])
     week_buffer = 0
     i = 0
     last_price = None
     ticker_data = []
     for data_point in value:
-        month = int(data_point['Date'].split(' ')[0].split('/')[0])
+        _date = data_point['Date'].split(' ')[0].split('/')
+        month = int(_date[0])
+        date = f'{_date[0]}/{_date[2]}'
         if month != current_month:
+            current_month = month
             new_price = week_buffer / i
             week_buffer = 0
             i = 0
