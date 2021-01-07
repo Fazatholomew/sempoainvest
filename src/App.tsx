@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) =>
       height: '100%'
     },
     paperChart: {
-      padding: theme.spacing(5),
+      padding: theme.spacing(3),
       textAlign: 'center',
       color: theme.palette.text.secondary,
       backgroundColor: theme.palette.text.secondary,

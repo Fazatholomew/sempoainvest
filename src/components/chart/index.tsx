@@ -7,7 +7,8 @@ import {
   Tooltip,
   Legend,
   Area,
-  ReferenceLine
+  ReferenceLine,
+  Label
 } from './rechart';
 import {
   anuitas,
@@ -16,7 +17,7 @@ import {
   loadData,
   bigNumberConverter,
 } from '../../utils/calculations';
-
+import AxisLabel from './chartComponents';
 import {dataPoint, anuitasParams, bigNumber} from '../../utils/@types.calculations';
 
 interface Props {
@@ -33,6 +34,8 @@ interface chartData {
   "Margin of Error": number[],
 }
 
+const satuan: string[] = ['', 'Ribu', 'Juta', 'Milyar', 'Triliun', 'Kuadriliun', 'Kuantiliun', 'Sekstiliun']
+
 /**
  * Render Data into line chart.
  * @param {number}  inputNumber - Big Number.
@@ -40,14 +43,14 @@ interface chartData {
  */
 
 const Chart = ({dimensions}: Props) => {
-  const lama:number = 15;
+  const lama:number = 7;
   const cashOutInterval:number = 12;
   const input:anuitasParams = {
     kredit: 10000000000,
     bungaPerBulan: 4.8 / 100 / 12,
     tenor: lama * 12,
   };
-  const rawTickerData: dataPoint[] = loadData('AAPL');
+  const rawTickerData: dataPoint[] = loadData('BBCA');
   const tickerData: number[] = rawTickerData.slice(0, input.tenor).reverse().map((currentData: dataPoint) => currentData.changes / 100);
   const bulanan:number = anuitas(input);
   const investData: number[] = generateInvestData({
@@ -64,8 +67,6 @@ const Chart = ({dimensions}: Props) => {
   const maxInvest: number = Math.max(...investData);
   const maxY: number = Math.max(maxInvest, Math.max(...kreditData));
   const {zeros}: {zeros:number} = bigNumberConverter(maxInvest);
-  console.log(maxInvest);
-  console.log(zeros);
   for (let i:number = 0; i < input.tenor + 1; i += 1) {
     const investasi:number = bigNumberConverter(investData[i], zeros).smallNumber
     const kredit:number = bigNumberConverter(kreditData[i], zeros).smallNumber
@@ -77,23 +78,32 @@ const Chart = ({dimensions}: Props) => {
     });
   }
   const renderReferenceAreas: any[] = [];
-  for (let i:number = 0; i < lama + 1; i += 1) {
+  for (let i:number = 1; i < lama; i += 1) {
+    const color: string = i % 2 === 0 ? 'white' : 'grey';
     renderReferenceAreas.push(
       <ReferenceLine
-        x={((i * cashOutInterval) - 1).toString()}
-        stroke="green"
-        label={{ value: `Cash Out ${i + 1}`, angle: -90, position: 'left', offset: 20 }} 
+        x={((i * cashOutInterval)).toString()}
+        stroke={color}
+        label={{ value: `Penarikan Investasi Ke-${i + 1}`, angle: -90, position: 'left', offset: 20, fill: color }} 
         key={i}
+        strokeDasharray="3 3"
       />
     )
   }
   return (
     <ComposedChart width={dimensions.width * 0.95} height={dimensions.height * 0.95}
       data={data}
-      margin={{ top: 10, right: 30, left: 20, bottom: 5 }}
       >
-        <XAxis dataKey="name" label="Bulan"/>
-        <YAxis label="RP"/>
+        <XAxis dataKey="name">
+          <Label 
+            value="Pembayaran" 
+            fill="white"
+            position="bottom"
+          />
+        </XAxis>
+        <YAxis
+          label={{ value: `RP (${satuan[zeros]})`, angle: -90, position: 'left', offset: -6, fill: 'white' }}
+        />
         <Tooltip />
         <Legend verticalAlign= "top" height={50}/>
         {renderReferenceAreas}
