@@ -80,3 +80,14 @@ export interface generateInvestDataParams {
 
 }
 
+export interface bigNumber {
+  /**
+   * Small Number: 'Converted number.',
+   */
+  smallNumber: number;
+  /**
+   * Zeros: 'How many 3 zeros is truncated.',
+   */
+  zeros: number;
+}
+

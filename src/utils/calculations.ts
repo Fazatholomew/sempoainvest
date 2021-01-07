@@ -5,7 +5,36 @@ import {
   anuitasParams,
   generateCreditDataParams,
   generateInvestDataParams,
+  bigNumber
 } from './@types.calculations';
+
+/**
+ * Scale down big numbers into scientific notation.
+ * @param {number}  inputNumber - Big Number.
+ * @return {object} Converted number and How many zero's.
+ */
+const bigNumberConverter = (inputNumber: number, zeros: number | null=null): bigNumber => {
+  if (zeros) {
+    const returnZero: number = zeros ? zeros : 1;
+    return {
+      zeros: returnZero,
+      smallNumber: Math.round((inputNumber / (1000 ** returnZero) * 100)) / 100,
+    }
+  }
+  for (let k:number = 0; k < 6; k += 1) {
+    const smallNumber:number = inputNumber / (10 ** (3 * k));
+    if (smallNumber > 0.01 && smallNumber < 999) {
+      return {
+        smallNumber: Math.round(smallNumber * 100) / 100,
+        zeros: k
+      }
+    }
+  }
+  return {
+    smallNumber: inputNumber,
+    zeros: 0
+  };
+};
 
 /**
  * Load JSON file of Stocks history and return the one requested.
@@ -23,6 +52,9 @@ const loadData = (ticker: string): dataPoint[] => {
  * @return {number} Cicilan per bulan.
  */
 const anuitas = ({kredit, bungaPerBulan, tenor}: anuitasParams): number => { 
+  if (bungaPerBulan === 0) {
+    return Math.floor(kredit / tenor);
+  }
   const upper:number = kredit * bungaPerBulan;
   const exponen:number = (-1 * tenor)
   const lower:number = 1-((1 + bungaPerBulan) ** exponen);
@@ -74,4 +106,5 @@ export {
   generateCreditData,
   generateInvestData,
   loadData,
+  bigNumberConverter
 };
