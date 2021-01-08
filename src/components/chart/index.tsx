@@ -16,6 +16,7 @@ import {
   generateInvestData,
   loadData,
   bigNumberConverter,
+  detectMobile
 } from '../../utils/calculations';
 import {DataToolTip} from './chartComponents';
 import {
@@ -33,8 +34,8 @@ interface Props {
 }
 
 interface chartData {
-  kredit: number;
-  investasi: number;
+  Kredit: number;
+  Investasi: number;
   name: string;
   "Margin of Error": number[],
 }
@@ -89,12 +90,12 @@ const Chart = ({dimensions}: Props) => {
   const maxX: number = Math.max(Math.max(...kreditData));
   const {zeros}: {zeros:number} = bigNumberConverter(maxInvest);
   for (let i:number = 0; i < input.tenor + 1; i += 1) {
-    const investasi:number = bigNumberConverter(investData[i], zeros).smallNumber
-    const kredit:number = bigNumberConverter(kreditData[i], zeros).smallNumber
+    const Investasi:number = bigNumberConverter(investData[i], zeros).smallNumber
+    const Kredit:number = bigNumberConverter(kreditData[i], zeros).smallNumber
     data.push({
       name: i.toString(),
-      kredit,
-      investasi,
+      Kredit,
+      Investasi,
       "Margin of Error": [
         bigNumberConverter(marginOfError[i][0], zeros).smallNumber,
         bigNumberConverter(marginOfError[i][1], zeros).smallNumber,
@@ -117,7 +118,7 @@ const Chart = ({dimensions}: Props) => {
   const off = gradientOffset(investData);
   return (<ComposedChart 
       width={dimensions.width * 0.97}
-      height={dimensions.height > dimensions.width ? dimensions.width * 0.75 : dimensions.height  * 0.95}
+      height={dimensions.height > dimensions.width ? dimensions.width * 0.618 : dimensions.height  * 0.95}
       data={data}
       margin={{bottom: 20}}>
         <XAxis dataKey="name">
@@ -135,14 +136,14 @@ const Chart = ({dimensions}: Props) => {
         <Legend verticalAlign= "top" height={50}/>
         <defs>
           <linearGradient id="splitColor" x1="0" y1="0" x2="0" y2="1">
-            <stop offset={off} stopColor="#82ca9d" stopOpacity={1}/>
-            <stop offset={off} stopColor="#E27161" stopOpacity={1}/>
+            <stop offset={off} stopColor="#8CD881" stopOpacity={1}/>
+            <stop offset={off} stopColor="#FF5E7A" stopOpacity={1}/>
           </linearGradient>
         </defs>
         <Area type="monotone" dataKey="Margin of Error" strokeDasharray="3 3" stroke="grey" fill="transparent" legendType='plainline'/>
-        <Line type="linear" dataKey="kredit" stroke="#E27161" dot={false} />
-        <Area type="monotone" dataKey="investasi" fill="url(#splitColor)" stroke="#82ca9d" activeDot={{r: 8}}/>
-        {renderReferenceAreas}
+        <Line type="linear" dataKey="Kredit" stroke="#FF5E7A" dot={false} />
+        <Area type="monotone" dataKey="Investasi" fill="url(#splitColor)" stroke="#8CD881" activeDot={{r: 8}}/>
+        {detectMobile() ? null : renderReferenceAreas}
     </ComposedChart>)
 }
 

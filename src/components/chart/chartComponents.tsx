@@ -1,10 +1,9 @@
 import React from 'react';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { bigNumberConverter } from '../../utils/calculations';
-import { bigNumber } from '../../utils/@types.calculations';
+import { printNumber } from '../../utils/calculations';
 
-const satuan: string[] = ['', 'Ribu', 'Juta', 'Milyar', 'Triliun', 'Kuadriliun', 'Kuantiliun', 'Sekstiliun']
+
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -29,10 +28,7 @@ interface TooltipProps {
   zeros: number
 }
 
-const printNumber = (inputValue: number, _zeros: number): string => {
-  const {smallNumber, zeros}: bigNumber = bigNumberConverter(inputValue * 10 ** (3 * _zeros));
-  return `Rp.${smallNumber} ${satuan[zeros]}`;
-}
+
 
 const DataToolTip = ({active, payload, label, zeros}: TooltipProps) => {
   const classes = useStyles();
