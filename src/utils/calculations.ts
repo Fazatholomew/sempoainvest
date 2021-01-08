@@ -5,7 +5,8 @@ import {
   anuitasParams,
   generateCreditDataParams,
   generateInvestDataParams,
-  bigNumber
+  bigNumber,
+  investDataType
 } from './@types.calculations';
 
 /**
@@ -21,11 +22,13 @@ const bigNumberConverter = (inputNumber: number, zeros: number | null=null): big
       smallNumber: Math.round((inputNumber / (1000 ** returnZero) * 100)) / 100,
     }
   }
+  const isNegative: boolean = inputNumber < 0;
   for (let k:number = 0; k < 6; k += 1) {
-    const smallNumber:number = inputNumber / (10 ** (3 * k));
+
+    const smallNumber:number = (isNegative ? inputNumber * -1 : inputNumber ) / (10 ** (3 * k));
     if (smallNumber > 0.01 && smallNumber < 999) {
       return {
-        smallNumber: Math.round(smallNumber * 100) / 100,
+        smallNumber: Math.round((isNegative ? smallNumber * -1 : smallNumber) * 100) / 100,
         zeros: k
       }
     }
@@ -83,11 +86,12 @@ const generateCreditData = ({kredit, bungaPerBulan, tenor, bulanan}: generateCre
  * @param {object}  generateInvestDataParams - Object of params.
  * @return {array} Data setiap bulan.
  */
-const generateInvestData = ({bulanan, tenor, cashOutInterval, tickerData}: generateInvestDataParams): number[] => {
+const generateInvestData = ({bulanan, tenor, cashOutInterval, tickerData}: generateInvestDataParams): investDataType => {
   const cashOutValue =  bulanan * cashOutInterval;
   const kredit:number = bulanan * tenor;
   let cash:number = kredit - cashOutValue;
   let counter:number = 0;
+  const marginOfError: investDataType["marginOfError"] = [[cash, cash]];
   const results:number[] = [cash];
   for (let i:number = 0; i < tenor; i += 1) {
     counter += 1;
@@ -95,10 +99,18 @@ const generateInvestData = ({bulanan, tenor, cashOutInterval, tickerData}: gener
       cash -= cashOutValue;
       counter = 0;
     }
+    marginOfError.push([
+      cash + (cash * (tickerData[i] - 0.05)),
+      cash + (cash * (tickerData[i] + 0.05)),
+    ]);
     cash += cash * tickerData[i];
     results.push(cash);
+    
   }
-  return results;
+  return {
+    investData: results,
+    marginOfError
+  };
 };
 
 export {

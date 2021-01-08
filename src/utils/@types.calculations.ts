@@ -91,3 +91,14 @@ export interface bigNumber {
   zeros: number;
 }
 
+export interface investDataType {
+  /**
+   * Small Number: 'Converted number.',
+   */
+  investData: number[];
+  /**
+   * Zeros: 'How many 3 zeros is truncated.',
+   */
+  marginOfError: [number, number][];
+}
+
