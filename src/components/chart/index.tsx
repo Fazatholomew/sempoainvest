@@ -56,7 +56,7 @@ const gradientOffset = (data:number[]) => {
   else{
   	return dataMax / (dataMax - dataMin);
   }
-}
+};
 
 /**
  * Render Data into line chart.
@@ -66,7 +66,7 @@ const gradientOffset = (data:number[]) => {
 
 const Chart = ({dimensions}: Props) => {
   const lama:number = 10;
-  const cashOutInterval:number = 12;
+  const cashOutInterval:number = 11;
   const input:anuitasParams = {
     kredit: 500000000,
     bungaPerBulan: 7 / 100 / 12,
@@ -87,7 +87,6 @@ const Chart = ({dimensions}: Props) => {
   });
   const data: chartData[] = [];
   const maxInvest: number = Math.max(...investData);
-  const maxX: number = Math.max(Math.max(...kreditData));
   const {zeros}: {zeros:number} = bigNumberConverter(maxInvest);
   for (let i:number = 0; i < input.tenor + 1; i += 1) {
     const Investasi:number = bigNumberConverter(investData[i], zeros).smallNumber
@@ -103,7 +102,7 @@ const Chart = ({dimensions}: Props) => {
     });
   }
   const renderReferenceAreas: any[] = [];
-  for (let i:number = 1; i < (lama * 12); i += 1) {
+  for (let i:number = 1; i < (cashOutInterval > 11 ? lama : lama * 12); i += 1) {
     const color: string = i % 2 === 0 ? 'white' : '#9AAEBB';
     renderReferenceAreas.push(
       <ReferenceLine
@@ -145,6 +144,6 @@ const Chart = ({dimensions}: Props) => {
         <Area type="monotone" dataKey="Investasi" fill="url(#splitColor)" stroke="#8CD881" activeDot={{r: 8}}/>
         {detectMobile() ? null : renderReferenceAreas}
     </ComposedChart>)
-}
+};
 
 export default Chart

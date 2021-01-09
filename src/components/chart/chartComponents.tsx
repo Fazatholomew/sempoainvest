@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme: Theme) =>
       textAlign: 'left',
       marginBottom: theme.spacing(3),
       color: 'white',
-      backgroundColor: theme.palette.text.secondary,
+      backgroundColor: 'rgba(0, 0, 0, 0.54)',
     },
   }),
 );
@@ -37,10 +37,10 @@ const DataToolTip = ({active, payload, label, zeros}: TooltipProps) => {
       const minValue: string = printNumber(Math.min(...value.value), zeros);
       const maxValue: string = printNumber(Math.max(...value.value), zeros);
       return (
-        <p style={{color: value.color}}>{`${value.dataKey}: ${minValue} ~ ${maxValue}`}</p>
+        <p key={value.dataKey} style={{color: value.color}}>{`${value.dataKey}: ${minValue} ~ ${maxValue}`}</p>
       )
     }
-    return (<p style={{color: value.color}}>{`${value.dataKey}: ${printNumber(value.value, zeros)}`}</p>)
+    return (<p key={value.dataKey} style={{color: value.color}}>{`${value.dataKey}: ${printNumber(value.value, zeros)}`}</p>)
   })
 
   if (active) {

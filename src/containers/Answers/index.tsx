@@ -2,10 +2,10 @@ import React, {useRef, useLayoutEffect, useState} from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import Modal from '@material-ui/core/Modal';
-import Backdrop from '@material-ui/core/Backdrop';
-import Fade from '@material-ui/core/Fade';
+import Button from '@material-ui/core/Button';
+
 import Chart from '../../components/chart';
+import {InvestasiModal, KreditModal} from './modals';
 import {printNumber} from '../../utils/calculations';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -18,13 +18,14 @@ const useStyles = makeStyles((theme: Theme) =>
       textAlign: 'center',
       marginBottom: theme.spacing(3),
       color: theme.palette.text.primary,
-      backgroundColor: theme.palette.text.secondary,
+      backgroundColor: 'transparent',
+      alignItems: 'center'
     },
     paperChart: {
       padding: theme.spacing(3),
       textAlign: 'center',
       color: theme.palette.text.secondary,
-      backgroundColor: theme.palette.text.secondary,
+      backgroundColor: 'rgba(0, 0, 0, 0.54)',
       height: window.innerHeight > window.innerWidth ? '30vh' : '60vh',
       marginBottom: theme.spacing(2),
       justifyContent: 'center',
@@ -37,13 +38,13 @@ const useStyles = makeStyles((theme: Theme) =>
     title: {
       fontSize: '1.3vw',
       color: 'white',
-      marginBottom: '1.68vw'
+      marginBottom: '0.7vw'
     },
     value: {
       fontSize: `${1.3 * 1.68}vw`,
       color: 'white',
       fontWeight: 'bold',
-      marginBottom: '1.6vw'
+      marginBottom: '0.5vw'
     },
     modal: {
       backgroundColor: '#34425A',
@@ -64,18 +65,18 @@ const useStyles = makeStyles((theme: Theme) =>
 const Answers: React.FC = () => {
   const targetRef = useRef();
   const paperRef = useRef();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(null);
   const initDimension: {width: number | undefined, height: number | undefined} = { width:1, height: 1 };
   const [dimensions, setDimensions]: [any | undefined, any] = useState(initDimension);
   const [paperDimensions, setPaperDimensions]: [any | undefined, any] = useState(initDimension);
   const classes = useStyles();
 
-  const handeOpen = () => {
-    setOpen(true);
+  const handeOpen = (modal: any) => {
+    setOpen(modal);
   };
 
   const handleClose = () => {
-    setOpen(false);
+    setOpen(null);
   };
 
   useLayoutEffect(() => {
@@ -97,25 +98,27 @@ const Answers: React.FC = () => {
   const renderbigInfos = [
     {
       title: 'Cicilan Per Bulan',
-      value: 'Rp. 500.23 Juta'
+      value: 'Rp. 500.23 Juta',
+      button: (<Button color="secondary" onClick={() => handeOpen(<KreditModal isShown={true} handleClose={handleClose} />)}>Edit</Button>)
     },
     {
       title: 'Instrumen Saham',
-      value: 'ANTM'
+      value: 'ANTM',
+      button: (<Button color="primary" onClick={() => handeOpen(<InvestasiModal isShown={true} handleClose={handleClose} />)}>Edit</Button>)
     },
     {
       title: 'Keuntungan',
       value: 'Rp. 2.23 Juta'
     },
   ].map((val) => (
-    <Grid item xs={4}>
+    <Grid item xs={4} key={val.title}>
       <Paper 
         className={classes.paper}
         ref={paperRef}
-        style={{height: paperDimensions.widht * 0.618}}
-        onClick={handeOpen}>
-        <div className={classes.title}>{val.title}</div>
-        <div className={classes.value}>{val.value}</div>
+        style={{height: paperDimensions.widht * 0.618}}>
+          <div className={classes.title}>{val.title}</div>
+          <div className={classes.value}>{val.value}</div>
+          {val.button}
       </Paper>
     </Grid>
   ))
@@ -133,26 +136,7 @@ const Answers: React.FC = () => {
       <Grid className={classes.root} container spacing={3}>
         {renderbigInfos}
       </Grid>
-      <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        className={classes.backgroundModal}
-        open={open}
-        onClose={handleClose}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
-        disableAutoFocus={true}
-      >
-        <Fade in={open}>
-          <div className={classes.modal}>
-            <h2 id="transition-modal-title">Transition modal</h2>
-            <p id="transition-modal-description">react-transition-group animates me.</p>
-          </div>
-        </Fade>
-      </Modal>
+      {open}
     </>
   );
 }
