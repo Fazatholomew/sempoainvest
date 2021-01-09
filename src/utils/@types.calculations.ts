@@ -102,3 +102,6 @@ export interface investDataType {
   marginOfError: [number, number][];
 }
 
+export interface dataProps {
+  [key: string]: string | number | boolean | any;
+};

@@ -13,6 +13,7 @@ import Button from '@material-ui/core/Button';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import {dataProps} from '../../utils/@types.calculations';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -47,40 +48,60 @@ interface modalProps {
   isShown: boolean;
   handleClose?: () => void;
   initDisable?: boolean;
-  handleSubmit?: () => void;
+  handleSubmit?: (data: dataProps) => void;
+  initData?: dataProps;
 };
 
-const KreditModal = ({isShown, handleClose=() => (null), handleSubmit, initDisable=true}: modalProps) => {
+const KreditModal = ({isShown, handleClose=() => (null), handleSubmit, initDisable=true, initData}: modalProps) => {
   const [disable, setDisable] = useState(initDisable);
+  const [data, setData] = useState(initData);
   const handleDisable = () => {
-    if (handleSubmit) {
-      handleSubmit();
-    }
     setDisable(!disable);
-  }
+  };
+  const submit = (submitData: dataProps) => {
+    handleSubmit(submitData);
+      if (handleClose) {
+        handleClose();
+      }
+  };
+  const handleChange = (newData: any, dataKey: string) => {
+    const newDataBuffer: dataProps = {...data};
+    newDataBuffer[dataKey] = newData;
+    setData(newDataBuffer);
+  };
   const classes = useStyles();
   const renderTextField = [
     {
       label: 'Harga Barang',
-      startAdornment: 'Rp'
+      startAdornment: 'Rp',
+      dataKey: 'kredit'
     },
     {
       label: 'DP',
-      endAdornment: '%'
+      endAdornment: '%',
+      dataKey: 'dp'
+    },
+    {
+      label: 'Bunga',
+      endAdornment: '%',
+      dataKey: 'bunga'
     },
     {
       label: 'Waktu Cicilan',
-      endAdornment: 'Tahun'
+      endAdornment: 'Tahun',
+      dataKey: 'tahun'
     },
     {
       label: 'Waktu Cicilan',
-      endAdornment: 'Bulan'
+      endAdornment: 'Bulan',
+      dataKey: 'bulan'
     },
   ].map((textData) => (
     <Grid item xs={12}>
       <TextField
         label={textData.label}
         id="filled-start-adornment"
+        value={data[textData.dataKey] || ''}
         fullWidth
         disabled={disable}
         InputProps={{
@@ -93,6 +114,7 @@ const KreditModal = ({isShown, handleClose=() => (null), handleSubmit, initDisab
         type="numeric"
         color="secondary"
         key={textData.label}
+        onChange={(event) => handleChange(event.target.value, textData.dataKey)}
       />
     </Grid>
   ));
@@ -116,12 +138,19 @@ const KreditModal = ({isShown, handleClose=() => (null), handleSubmit, initDisab
               {renderTextField}
               <Grid item xs={12}>
                 <FormControlLabel
-                  control={<Switch disabled={disable} color="secondary" name="syariah" />}
+                  control={
+                    <Switch
+                      checked={Boolean(data.syariah)}
+                      disabled={disable}
+                      color="secondary"
+                      name="syariah"
+                      onChange={(event) => handleChange(event.target.checked, 'syariah')}
+                    />}
                   label="Syariah?"
                 />
               </Grid>
               <Grid item xs={12}>
-                <Button color="secondary" onClick={handleDisable}>Edit</Button>
+                <Button color="secondary" onClick={disable ? handleDisable : () => submit(data)}>{disable ? 'Edit' : 'Enter'}</Button>
               </Grid>
             </Grid>
           </div>
@@ -130,15 +159,24 @@ const KreditModal = ({isShown, handleClose=() => (null), handleSubmit, initDisab
   );
 };
 
-const InvestasiModal = ({isShown, handleClose, handleSubmit, initDisable=true}: modalProps) => {
+const InvestasiModal = ({isShown, handleClose, handleSubmit, initDisable=true, initData}: modalProps) => {
   const classes = useStyles();
   const [disable, setDisable] = useState(initDisable);
+  const [data, setData] = useState(initData);
   const handleDisable = () => {
-    if (handleSubmit) {
-      handleSubmit();
-    }
     setDisable(!disable);
-  }
+  };
+  const submit = (submitData: dataProps) => {
+    handleSubmit(submitData);
+      if (handleClose) {
+        handleClose();
+      }
+  };
+  const handleChange = (newData: any, dataKey: string) => {
+    const newDataBuffer: dataProps = {...data};
+    newDataBuffer[dataKey] = newData;
+    setData(newDataBuffer);
+  };
   const renderMenuitem = ['AATM', 'AAPL', 'TSLA'].map((saham) => <MenuItem key={saham} value={saham}>{saham}</MenuItem>);
   return (
     <Modal
@@ -162,10 +200,12 @@ const InvestasiModal = ({isShown, handleClose, handleSubmit, initDisable=true}: 
                   <InputLabel id="saham">Saham</InputLabel>
                   <Select
                     labelId="saham"
+                    value={data.saham || ''}
                     id="saham-select"
                     label="Saham"
                     disabled={disable}
-                    className={classes.textField}>
+                    className={classes.textField}
+                    onChange={(event) => handleChange(event.target.value, 'saham')}>
                       {renderMenuitem}
                   </Select>
                 </FormControl>
@@ -176,6 +216,7 @@ const InvestasiModal = ({isShown, handleClose, handleSubmit, initDisable=true}: 
                   id="filled-start-adornment"
                   fullWidth
                   disabled={disable}
+                  onChange={(event) => handleChange(event.target.value, 'frekuensi')}
                   InputProps={{
                     endAdornment: (<InputAdornment className={classes.textField} position="end">Bulan</InputAdornment>),
                     className: classes.textField
@@ -184,10 +225,11 @@ const InvestasiModal = ({isShown, handleClose, handleSubmit, initDisable=true}: 
                   variant="outlined"
                   type="numeric"
                   color="primary"
+                  value={data.frekuensi || 1}
                 />
               </Grid>
               <Grid item xs={12}>
-                <Button color="primary" onClick={handleDisable}>Edit</Button>
+                <Button color="primary" onClick={disable ? handleDisable : () => submit(data)}>{disable ? 'Edit' : 'Enter'}</Button>
               </Grid>
             </Grid>
           </div>

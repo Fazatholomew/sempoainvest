@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import Chart from '../../components/chart';
 import {InvestasiModal, KreditModal} from './modals';
 import {printNumber} from '../../utils/calculations';
+import {dataProps} from '../../utils/@types.calculations';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -62,7 +63,12 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const Answers: React.FC = () => {
+interface Props {
+  data: dataProps,
+  handleSubmit: () => void
+};
+
+const Answers = ({data, handleSubmit}:Props): JSX.Element => {
   const targetRef = useRef();
   const paperRef = useRef();
   const [open, setOpen] = useState(null);
@@ -99,12 +105,12 @@ const Answers: React.FC = () => {
     {
       title: 'Cicilan Per Bulan',
       value: 'Rp. 500.23 Juta',
-      button: (<Button color="secondary" onClick={() => handeOpen(<KreditModal isShown={true} handleClose={handleClose} />)}>Edit</Button>)
+      button: (<Button color="secondary" onClick={() => handeOpen(<KreditModal initData={data} isShown={true} handleClose={handleClose} handleSubmit={handleSubmit} />)}>Edit</Button>)
     },
     {
       title: 'Instrumen Saham',
       value: 'ANTM',
-      button: (<Button color="primary" onClick={() => handeOpen(<InvestasiModal isShown={true} handleClose={handleClose} />)}>Edit</Button>)
+      button: (<Button color="primary" onClick={() => handeOpen(<InvestasiModal initData={data} isShown={true} handleClose={handleClose} handleSubmit={handleSubmit} />)}>Edit</Button>)
     },
     {
       title: 'Keuntungan',
