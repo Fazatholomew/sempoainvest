@@ -148,8 +148,6 @@ const KreditModal = ({isShown, handleClose=() => (null), handleSubmit, initDisab
                     />}
                   label="Syariah?"
                 />
-              </Grid>
-              <Grid item xs={12}>
                 <Button color="secondary" onClick={disable ? handleDisable : () => submit(data)}>{disable ? 'Edit' : 'Enter'}</Button>
               </Grid>
             </Grid>

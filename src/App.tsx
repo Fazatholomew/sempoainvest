@@ -43,7 +43,9 @@ function App() {
       const newDataBuffer: dataProps = { ...data, ...inputData};
       if (newDataBuffer.saham) {
         const filterNotNumber = (str: string): number => {
-          const matches = str.match(/(\d+)/);
+          const matches = str.match(/\d+/g);
+          console.log(matches);
+          console.log(parseFloat(matches.join('')));
           return parseFloat(matches.join(''));
         }
         const {
@@ -79,6 +81,9 @@ function App() {
         newDataBuffer['kreditData'] = kreditData;
         newDataBuffer['marginOfError'] = marginOfError;
         newDataBuffer['bulanan'] = bulanan;
+        newDataBuffer['lama'] = lama;
+        newDataBuffer['cashOutInterval'] = cashOutInterval;
+        console.log(newDataBuffer)
       }
       setData(newDataBuffer);
     }

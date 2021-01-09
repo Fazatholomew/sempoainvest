@@ -23,7 +23,8 @@ import {
   dataPoint,
   anuitasParams,
   bigNumber,
-  investDataType
+  investDataType,
+  chartDataTypes
 } from '../../utils/@types.calculations';
 
 interface Props {
@@ -31,13 +32,7 @@ interface Props {
     width: number,
     height: number,
   };
-}
-
-interface chartData {
-  Kredit: number;
-  Investasi: number;
-  name: string;
-  "Margin of Error": number[],
+  chartData: any;
 }
 
 const satuan: string[] = ['', 'Ribu', 'Juta', 'Milyar', 'Triliun', 'Kuadriliun', 'Kuantiliun', 'Sekstiliun']
@@ -64,31 +59,18 @@ const gradientOffset = (data:number[]) => {
  * @return {object} Converted number and How many zero's.
  */
 
-const Chart = ({dimensions}: Props) => {
-  const lama:number = 10;
-  const cashOutInterval:number = 11;
-  const input:anuitasParams = {
-    kredit: 500000000,
-    bungaPerBulan: 7 / 100 / 12,
-    tenor: lama * 12,
-  };
-  const rawTickerData: dataPoint[] = loadData('ANTM');
-  const tickerData: number[] = rawTickerData.slice(0, input.tenor).reverse().map((currentData: dataPoint) => currentData.changes / 100);
-  const bulanan:number = anuitas(input);
-  const {investData, marginOfError}: investDataType = generateInvestData({
-    ...input,
-    bulanan,
-    tickerData,
+const Chart = ({dimensions, chartData}: Props) => {
+  const {
+    investData,
+    kreditData,
+    marginOfError,
+    lama,
     cashOutInterval
-  });
-  const kreditData: number[] = generateCreditData({
-    ...input,
-    bulanan
-  });
-  const data: chartData[] = [];
+  } = chartData;
+  const data: chartDataTypes[] = [];
   const maxInvest: number = Math.max(...investData);
   const {zeros}: {zeros:number} = bigNumberConverter(maxInvest);
-  for (let i:number = 0; i < input.tenor + 1; i += 1) {
+  for (let i:number = 0; i < (lama * 12) + 1; i += 1) {
     const Investasi:number = bigNumberConverter(investData[i], zeros).smallNumber
     const Kredit:number = bigNumberConverter(kreditData[i], zeros).smallNumber
     data.push({

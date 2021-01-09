@@ -104,17 +104,20 @@ const Answers = ({data, handleSubmit}:Props): JSX.Element => {
   const renderbigInfos = [
     {
       title: 'Cicilan Per Bulan',
-      value: 'Rp. 500.23 Juta',
+      value: printNumber(data.bulanan, 0),
       button: (<Button color="secondary" onClick={() => handeOpen(<KreditModal initData={data} isShown={true} handleClose={handleClose} handleSubmit={handleSubmit} />)}>Edit</Button>)
     },
     {
       title: 'Instrumen Saham',
-      value: 'ANTM',
+      value: data.saham,
       button: (<Button color="primary" onClick={() => handeOpen(<InvestasiModal initData={data} isShown={true} handleClose={handleClose} handleSubmit={handleSubmit} />)}>Edit</Button>)
     },
     {
       title: 'Keuntungan',
-      value: 'Rp. 2.23 Juta'
+      value: printNumber(
+        data.investData[data.investData.length - 1] - (data.bulanan * data.lama),
+        0
+      )
     },
   ].map((val) => (
     <Grid item xs={4} key={val.title}>
@@ -134,7 +137,7 @@ const Answers = ({data, handleSubmit}:Props): JSX.Element => {
         <Grid item xs={12}>
           <Paper className={classes.paperChart}>
             <div className={classes.chart} ref={targetRef}>
-              <Chart dimensions={dimensions}/>
+              <Chart dimensions={dimensions} chartData={data}/>
             </div>
           </Paper>
         </Grid>

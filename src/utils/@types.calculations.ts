@@ -105,3 +105,10 @@ export interface investDataType {
 export interface dataProps {
   [key: string]: string | number | boolean | any;
 };
+
+export interface chartDataTypes {
+  Kredit: number;
+  Investasi: number;
+  name: string;
+  "Margin of Error": number[],
+}
