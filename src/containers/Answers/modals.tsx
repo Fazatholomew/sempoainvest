@@ -13,6 +13,7 @@ import Button from '@material-ui/core/Button';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import {filterNotNumber, loadTickers, printNumber} from '../../utils/calculations';
 import {dataProps} from '../../utils/@types.calculations';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -64,9 +65,18 @@ const KreditModal = ({isShown, handleClose=() => (null), handleSubmit, initDisab
         handleClose();
       }
   };
-  const handleChange = (newData: any, dataKey: string) => {
+  const handleChange = (newData: any, dataKey: string, isFocus=false) => {
     const newDataBuffer: dataProps = {...data};
-    newDataBuffer[dataKey] = newData;
+    let convertedData = newData;
+    if (isFocus) {
+      const clean = filterNotNumber(newData);
+      if (clean !== null) {
+        convertedData = printNumber(clean, 0, false);
+      }else{
+        convertedData = newData
+      }
+    }
+    newDataBuffer[dataKey] = convertedData;
     setData(newDataBuffer);
   };
   const classes = useStyles();
@@ -97,11 +107,11 @@ const KreditModal = ({isShown, handleClose=() => (null), handleSubmit, initDisab
       dataKey: 'bulan'
     },
   ].map((textData) => (
-    <Grid item xs={12}>
+    <Grid item xs={12} key={textData.dataKey}>
       <TextField
         label={textData.label}
         id="filled-start-adornment"
-        value={data[textData.dataKey] || ''}
+        value={data[textData.dataKey]}
         fullWidth
         disabled={disable}
         InputProps={{
@@ -113,8 +123,8 @@ const KreditModal = ({isShown, handleClose=() => (null), handleSubmit, initDisab
         variant="outlined"
         type="numeric"
         color="secondary"
-        key={textData.label}
         onChange={(event) => handleChange(event.target.value, textData.dataKey)}
+        onBlur={(event) => handleChange(event.target.value, textData.dataKey, true)}
       />
     </Grid>
   ));
@@ -170,12 +180,21 @@ const InvestasiModal = ({isShown, handleClose, handleSubmit, initDisable=true, i
         handleClose();
       }
   };
-  const handleChange = (newData: any, dataKey: string) => {
+  const handleChange = (newData: any, dataKey: string, isFocus=false) => {
     const newDataBuffer: dataProps = {...data};
-    newDataBuffer[dataKey] = newData;
+    let convertedData = newData;
+    if (isFocus) {
+      const clean = filterNotNumber(newData);
+      if (clean !== null) {
+        convertedData = printNumber(clean, 0, false);
+      }else{
+        convertedData = newData
+      }
+    }
+    newDataBuffer[dataKey] = convertedData;
     setData(newDataBuffer);
   };
-  const renderMenuitem = ['AATM', 'AAPL', 'TSLA'].map((saham) => <MenuItem key={saham} value={saham}>{saham}</MenuItem>);
+  const renderMenuitem = loadTickers().map((saham: string) => <MenuItem key={saham} value={saham}>{saham}</MenuItem>);
   return (
     <Modal
       aria-labelledby="transition-modal-title"
@@ -198,7 +217,7 @@ const InvestasiModal = ({isShown, handleClose, handleSubmit, initDisable=true, i
                   <InputLabel id="saham">Saham</InputLabel>
                   <Select
                     labelId="saham"
-                    value={data.saham || ''}
+                    value={data.saham}
                     id="saham-select"
                     label="Saham"
                     disabled={disable}
@@ -215,6 +234,7 @@ const InvestasiModal = ({isShown, handleClose, handleSubmit, initDisable=true, i
                   fullWidth
                   disabled={disable}
                   onChange={(event) => handleChange(event.target.value, 'frekuensi')}
+                  onBlur={(event) => handleChange(event.target.value, 'frekuensi', true)}
                   InputProps={{
                     endAdornment: (<InputAdornment className={classes.textField} position="end">Bulan</InputAdornment>),
                     className: classes.textField
@@ -223,7 +243,7 @@ const InvestasiModal = ({isShown, handleClose, handleSubmit, initDisable=true, i
                   variant="outlined"
                   type="numeric"
                   color="primary"
-                  value={data.frekuensi || 1}
+                  value={data.frekuensi}
                 />
               </Grid>
               <Grid item xs={12}>

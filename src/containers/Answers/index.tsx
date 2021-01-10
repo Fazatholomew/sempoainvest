@@ -3,6 +3,7 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
+import Grow from '@material-ui/core/Grow';
 
 import Chart from '../../components/chart';
 import {InvestasiModal, KreditModal} from './modals';
@@ -115,21 +116,23 @@ const Answers = ({data, handleSubmit}:Props): JSX.Element => {
     {
       title: 'Keuntungan',
       value: printNumber(
-        data.investData[data.investData.length - 1] - (data.bulanan * data.lama),
+        data.investData[data.investData.length - 1],
         0
       )
     },
-  ].map((val) => (
-    <Grid item xs={4} key={val.title}>
-      <Paper 
-        className={classes.paper}
-        ref={paperRef}
-        style={{height: paperDimensions.widht * 0.618}}>
-          <div className={classes.title}>{val.title}</div>
-          <div className={classes.value}>{val.value}</div>
-          {val.button}
-      </Paper>
-    </Grid>
+  ].map((val, i) => (
+    <Grow in={true} timeout={500 * (i + 1)}>
+      <Grid item xs={4} key={val.title}>
+        <Paper 
+          className={classes.paper}
+          ref={paperRef}
+          style={{height: paperDimensions.widht * 0.618}}>
+            <div className={classes.title}>{val.title}</div>
+            <div className={classes.value}>{val.value}</div>
+            {val.button}
+        </Paper>
+      </Grid>
+    </Grow>
   ))
   return (
     <>

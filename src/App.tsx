@@ -1,6 +1,7 @@
-import React, {useRef, useLayoutEffect, useState} from 'react';
+import React, {useState} from 'react';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import './App.css';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Answers from './containers/Answers';
 import {InvestasiModal, KreditModal} from './containers/Answers/modals';
 import {
@@ -8,10 +9,9 @@ import {
   generateCreditData,
   generateInvestData,
   loadData,
-  bigNumberConverter,
+  filterNotNumber
 } from './utils/calculations';
 import {
-  bigNumber,
   dataProps,
   dataPoint,
   anuitasParams,
@@ -34,20 +34,22 @@ const theme = createMuiTheme({
 });
 
 function App() {
-  const initData: dataProps = {};
+  const initData: dataProps = {
+    kredit: '0',
+    dp: '0',
+    bunga: '0',
+    bulan: '0',
+    tahun: '1',
+    frekuensi: '1',
+    saham: ''
+  };
   const [index, setIndex] = useState(0);
   const [data, setData] = useState(initData);
-  
+  const [isShow, setIsShow] = useState(true);
   const handleNext = (inputData?: dataProps) => {
     if (inputData) {
       const newDataBuffer: dataProps = { ...data, ...inputData};
       if (newDataBuffer.saham) {
-        const filterNotNumber = (str: string): number => {
-          const matches = str.match(/\d+/g);
-          console.log(matches);
-          console.log(parseFloat(matches.join('')));
-          return parseFloat(matches.join(''));
-        }
         const {
           kredit,
           dp,
@@ -57,6 +59,21 @@ function App() {
           saham,
           frekuensi
         }:dataProps = newDataBuffer;
+        const rawUrlData = {
+          kredit,
+          dp,
+          bunga,
+          bulan,
+          tahun,
+          saham,
+          frekuensi
+        };
+        const url = new URL(window.location.href);
+        const urlData = Object.entries(rawUrlData).map(([key, value]) => {
+          url.searchParams.set(key, value);
+          return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+        }).join('&');
+        window.history.pushState({before: urlData}, '', url.href);
         const lama:number = (filterNotNumber(tahun as string) + (filterNotNumber(bulan as string) / 12));
         const cashOutInterval:number = filterNotNumber(frekuensi as string);
         const input:anuitasParams = {
@@ -83,23 +100,37 @@ function App() {
         newDataBuffer['bulanan'] = bulanan;
         newDataBuffer['lama'] = lama;
         newDataBuffer['cashOutInterval'] = cashOutInterval;
-        console.log(newDataBuffer)
       }
       setData(newDataBuffer);
     }
-    setIndex((index + 1) % 2);
+    if (index === 3) {
+      return;
+    }
+    setIsShow(false);
+    setIndex((index + 1) % 3);
+    setTimeout(() => {
+      setIsShow(true);
+    }, 50);
+    if (index + 1 === 2) {
+      if (!inputData.saham) {
+        setIndex(0);
+      }else{
+        setTimeout(() => {
+          setIndex(3)
+          setIsShow(true);
+        }, 3000);
+      }
+    }
   };
-  const modals = [
-    (<KreditModal initDisable={false} isShown={true} handleSubmit={handleNext} initData={data} />),
-    (<InvestasiModal initDisable={false} isShown={true} handleSubmit={handleNext} initData={data} />),
-    
-  ];
   return (
     <div className="App">
       <MuiThemeProvider theme={theme}>
         <header className="App-header">
           <h1>Sempoa Investasi</h1>
-          {data.saham ? (<Answers data={data} handleSubmit={handleNext}  />) : modals[index]}
+          {index === 0 ? <KreditModal initDisable={false} isShown={isShow} handleSubmit={handleNext} initData={data} /> : null}
+          {index === 1 ? <InvestasiModal initDisable={false} isShown={isShow} handleSubmit={handleNext} initData={data} /> : null}
+          {index === 2 ? <CircularProgress /> : null}
+          {data.saham && index === 3 ? (<Answers data={data} handleSubmit={handleNext}  />) : null}
         </header>
       </MuiThemeProvider>
       <footer>

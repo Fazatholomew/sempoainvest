@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   ComposedChart,
   Line,
@@ -11,19 +11,11 @@ import {
   Label
 } from './rechart';
 import {
-  anuitas,
-  generateCreditData,
-  generateInvestData,
-  loadData,
   bigNumberConverter,
   detectMobile
 } from '../../utils/calculations';
 import {DataToolTip} from './chartComponents';
 import {
-  dataPoint,
-  anuitasParams,
-  bigNumber,
-  investDataType,
   chartDataTypes
 } from '../../utils/@types.calculations';
 

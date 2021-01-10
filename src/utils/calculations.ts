@@ -17,13 +17,30 @@ const satuan: string[] = ['', 'Ribu', 'Juta', 'Milyar', 'Triliun', 'Kuadriliun',
  * @return {string} Number in Rp.
  */
 
-const printNumber = (inputValue: number, _zeros: number): string => {
-  var formatter = new Intl.NumberFormat('id-ID', {
+const printNumber = (inputValue: number, _zeros: number, isPrintRp=true): string => {
+  const formatter = new Intl.NumberFormat('id-ID', {
     style: 'currency',
     currency: 'IDR',
   });
   const {smallNumber, zeros}: bigNumber = bigNumberConverter(inputValue * 10 ** (3 * _zeros));
+  if (!isPrintRp) {
+    return formatter.format(inputValue).substring(3);
+  }
   return `${formatter.format(smallNumber)} ${satuan[zeros]}`;
+};
+
+/**
+ * Convert string into number with garbage in it.
+ * @param {string}  str - Big Number.
+ * @return {number} Number.
+ */
+
+const filterNotNumber = (str: string): number => {
+  const matches = str.replace(/\./g, '').replace(/,/g, '.').match(/[+-]?\d+(\.\d+)?/g);
+  if (!matches) {
+    return null;
+  }
+  return parseFloat(matches.join(''));
 };
 
 /**
@@ -64,6 +81,15 @@ const bigNumberConverter = (inputNumber: number, zeros: number | null=null): big
 const loadData = (ticker: string): dataPoint[] => {
   const data:allData = jsonData;
   return data[ticker];
+};
+
+/**
+ * Load JSON file of Stocks history and return all tickers.
+ * @return {array} All tickers.
+ */
+const loadTickers = (): string[] => {
+  const data:allData = jsonData;
+    return Object.keys(data);
 };
 
 /**
@@ -147,5 +173,7 @@ export {
   loadData,
   bigNumberConverter,
   printNumber,
-  detectMobile
+  detectMobile,
+  loadTickers,
+  filterNotNumber
 };
