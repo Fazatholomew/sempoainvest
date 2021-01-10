@@ -16,6 +16,17 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import {filterNotNumber, loadTickers, printNumber} from '../../utils/calculations';
 import {dataProps} from '../../utils/@types.calculations';
 
+import {
+  FacebookShareButton,
+  LineShareButton,
+  LinkedinShareButton,
+  TwitterShareButton,
+  LinkedinIcon,
+  FacebookIcon,
+  LineIcon,
+  TwitterIcon
+} from "react-share";
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -41,6 +52,13 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     textField: {
       color: 'white',
+    },
+    socials: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      height: '70%'
     }
   }),
 );
@@ -256,7 +274,62 @@ const InvestasiModal = ({isShown, handleClose, handleSubmit, initDisable=true, i
   );
 };
 
+const SocialMediaButtons = ({isShown, handleClose, initData}: modalProps) => {
+  const classes = useStyles();
+  const lines = `Kemungkinan saya ${initData.investData[initData.investData.length - 1] > 0 ? 'untung' : 'rugi'}: ${
+    printNumber(initData.investData[initData.investData.length - 1], 0)
+  }\nDengan investasi di ${initData.saham}\nSempoa Investasi by Jimmy\n`
+  return (
+    <Modal
+      aria-labelledby="transition-modal-title"
+      aria-describedby="transition-modal-description"
+      className={classes.backgroundModal}
+      open={isShown}
+      onClose={handleClose}
+      closeAfterTransition
+      BackdropComponent={Backdrop}
+      BackdropProps={{
+        timeout: 500,
+      }}
+      disableAutoFocus={true}>
+        <Fade in={isShown}>
+          <div className={classes.modal}>
+            <h2>Bagiin dong ke temen-temen!</h2>
+            <div className={classes.socials}>
+              <FacebookShareButton
+                url={window.location.href}
+                quote={lines}
+                className="Demo__some-network__share-button">
+                <FacebookIcon size={64} round />
+              </FacebookShareButton>
+              <LineShareButton
+                url={window.location.href}
+                title={lines}
+                className="Demo__some-network__share-button">
+                <LineIcon size={64} round />
+              </LineShareButton>
+              <TwitterShareButton
+                url={window.location.href}
+                title={lines}
+                className="Demo__some-network__share-button">
+                <TwitterIcon size={64} round />
+              </TwitterShareButton>
+              <LinkedinShareButton
+                url={window.location.href}
+                title={lines}
+                className="Demo__some-network__share-button">
+                <LinkedinIcon size={64} round />
+              </LinkedinShareButton>
+              <Button color="primary" variant="outlined" onClick={handleClose}>Thanks!</Button>
+            </div>
+          </div>
+        </Fade>
+    </Modal>
+  );
+};
+
 export {
   KreditModal,
-  InvestasiModal
+  InvestasiModal,
+  SocialMediaButtons
 };

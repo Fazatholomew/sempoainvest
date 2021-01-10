@@ -115,23 +115,23 @@ const Answers = ({data, handleSubmit}:Props): JSX.Element => {
       button: (<Button color="primary" onClick={() => handeOpen(<InvestasiModal initData={data} isShown={true} handleClose={handleClose} handleSubmit={handleSubmit} />)}>Edit</Button>)
     },
     {
-      title: 'Keuntungan',
+      title: `Estimasi ${data.investData[data.investData.length - 1] > 0 ? 'Keuntungan' : 'Kerugian'}`,
       value: printNumber(
-        data.investData[data.investData.length - 1],
+        Math.abs(data.investData[data.investData.length - 1]),
         0
       )
     },
   ].map((val, i) => (
-    <Grow in={true} timeout={1000 * (i + 1)}>
-      <Grid item xs={4} key={val.title}>
-        <Paper 
+    <Grow in={true} timeout={1000 * (i + 1)}key={val.title}>
+      <Grid item xs={4}>
+        <div 
           className={classes.paper}
           ref={paperRef}
-          style={{height: paperDimensions.widht * 0.618}}>
+          style={{height: paperDimensions.width * 0.618}}>
             <div className={classes.title}>{val.title}</div>
             <div className={classes.value}>{val.value}</div>
             {val.button}
-        </Paper>
+        </div>
       </Grid>
     </Grow>
   ))

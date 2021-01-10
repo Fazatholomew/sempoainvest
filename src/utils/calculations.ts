@@ -17,7 +17,7 @@ const satuan: string[] = ['', 'Ribu', 'Juta', 'Milyar', 'Triliun', 'Kuadriliun',
  * @return {string} Number in Rp.
  */
 
-const printNumber = (inputValue: number, _zeros: number, isPrintRp=true): string => {
+const printNumber = (inputValue: number, _zeros: number = 0, isPrintRp=true): string => {
   const formatter = new Intl.NumberFormat('id-ID', {
     style: 'currency',
     currency: 'IDR',
