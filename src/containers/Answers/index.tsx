@@ -4,6 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import Grow from '@material-ui/core/Grow';
+import Slide from '@material-ui/core/Slide';
 
 import Chart from '../../components/chart';
 import {InvestasiModal, KreditModal} from './modals';
@@ -121,7 +122,7 @@ const Answers = ({data, handleSubmit}:Props): JSX.Element => {
       )
     },
   ].map((val, i) => (
-    <Grow in={true} timeout={500 * (i + 1)}>
+    <Grow in={true} timeout={1000 * (i + 1)}>
       <Grid item xs={4} key={val.title}>
         <Paper 
           className={classes.paper}
@@ -138,11 +139,13 @@ const Answers = ({data, handleSubmit}:Props): JSX.Element => {
     <>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <Paper className={classes.paperChart}>
-            <div className={classes.chart} ref={targetRef}>
-              <Chart dimensions={dimensions} chartData={data}/>
-            </div>
-          </Paper>
+          <Slide in={true} timeout={1000} direction={'right'}>
+            <Paper className={classes.paperChart}>
+              <div className={classes.chart} ref={targetRef}>
+                <Chart dimensions={dimensions} chartData={data}/>
+              </div>
+            </Paper>
+          </Slide>
         </Grid>
       </Grid>
       <Grid className={classes.root} container spacing={3}>

@@ -1,9 +1,15 @@
-import React, {useState} from 'react';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import React, {useState, useEffect} from 'react';
+import { MuiThemeProvider, createMuiTheme, makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import './App.css';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Answers from './containers/Answers';
 import {InvestasiModal, KreditModal} from './containers/Answers/modals';
+import LinkedInIcon from '@material-ui/icons/LinkedIn';
+import GitHubIcon from '@material-ui/icons/GitHub';
+import AlternateEmailIcon from '@material-ui/icons/AlternateEmail';
+import YouTubeIcon from '@material-ui/icons/YouTube';
+import HttpIcon from '@material-ui/icons/Http';
+import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
 import {
   anuitas,
   generateCreditData,
@@ -33,7 +39,21 @@ const theme = createMuiTheme({
   }
 });
 
-function App() {
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    socialMediaIcon: {
+      marginRight: '0.5vw',
+      marginLeft: '0.5vw',
+      '&:hover': {
+        cursor: 'pointer',
+        color: '#FF5E7A'
+      }
+    },
+  }),
+);
+
+const App = () => {
+  const classes = useStyles();
   const initData: dataProps = {
     kredit: '0',
     dp: '0',
@@ -74,32 +94,6 @@ function App() {
           return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
         }).join('&');
         window.history.pushState({before: urlData}, '', url.href);
-        const lama:number = (filterNotNumber(tahun as string) + (filterNotNumber(bulan as string) / 12));
-        const cashOutInterval:number = filterNotNumber(frekuensi as string);
-        const input:anuitasParams = {
-          kredit: filterNotNumber(kredit as string) * (1 - (filterNotNumber(dp as string) / 100)),
-          bungaPerBulan: filterNotNumber(bunga as string) / 100 / 12,
-          tenor: lama * 12,
-        };
-        const rawTickerData: dataPoint[] = loadData(saham as string);
-        const tickerData: number[] = rawTickerData.slice(0, input.tenor).reverse().map((currentData: dataPoint) => currentData.changes / 100);
-        const bulanan:number = anuitas(input);
-        const {investData, marginOfError}: investDataType = generateInvestData({
-          ...input,
-          bulanan,
-          tickerData,
-          cashOutInterval
-        });
-        const kreditData: number[] = generateCreditData({
-          ...input,
-          bulanan
-        });
-        newDataBuffer['investData'] = investData;
-        newDataBuffer['kreditData'] = kreditData;
-        newDataBuffer['marginOfError'] = marginOfError;
-        newDataBuffer['bulanan'] = bulanan;
-        newDataBuffer['lama'] = lama;
-        newDataBuffer['cashOutInterval'] = cashOutInterval;
       }
       setData(newDataBuffer);
     }
@@ -122,6 +116,54 @@ function App() {
       }
     }
   };
+  useEffect(() => {
+    const search = window.location.search.substring(1);
+    const newData = JSON.parse('{"' + decodeURIComponent(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
+    const {
+      kredit,
+      dp,
+      bunga,
+      bulan,
+      tahun,
+      saham,
+      frekuensi
+    }:dataProps = newData;
+    const lama:number = (filterNotNumber(tahun as string) + (filterNotNumber(bulan as string) / 12));
+    const cashOutInterval:number = filterNotNumber(frekuensi as string);
+    const input:anuitasParams = {
+      kredit: filterNotNumber(kredit as string) * (1 - (filterNotNumber(dp as string) / 100)),
+      bungaPerBulan: filterNotNumber(bunga as string) / 100 / 12,
+      tenor: lama * 12,
+    };
+    const rawTickerData: dataPoint[] = loadData(saham as string);
+    const tickerData: number[] = rawTickerData.slice(0, input.tenor).reverse().map((currentData: dataPoint) => currentData.changes / 100);
+    const bulanan:number = anuitas(input);
+    const {investData, marginOfError}: investDataType = generateInvestData({
+      ...input,
+      bulanan,
+      tickerData,
+      cashOutInterval
+    });
+    const kreditData: number[] = generateCreditData({
+      ...input,
+      bulanan
+    });
+    newData['investData'] = investData;
+    newData['kreditData'] = kreditData;
+    newData['marginOfError'] = marginOfError;
+    newData['bulanan'] = bulanan;
+    newData['lama'] = lama;
+    newData['cashOutInterval'] = cashOutInterval;
+    setData(newData);
+    if (index !== 3) {
+      setIsShow(true);
+      setIndex(2);
+      setTimeout(() => {
+        setIndex(3)
+        setIsShow(true);
+      }, 3000);
+    }
+  }, [window.location.href])
   return (
     <div className="App">
       <MuiThemeProvider theme={theme}>
@@ -132,11 +174,17 @@ function App() {
           {index === 2 ? <CircularProgress /> : null}
           {data.saham && index === 3 ? (<Answers data={data} handleSubmit={handleNext}  />) : null}
         </header>
+        <footer>
+          <LinkedInIcon fontSize="small" className={classes.socialMediaIcon} onClick={() => window.location.href = 'https://www.linkedin.com/in/faza-jimmy-hikmatullah-48bb54152/'}/>
+          <GitHubIcon fontSize="small" className={classes.socialMediaIcon} onClick={() => window.location.href = 'https://github.com/Fazatholomew'} />
+          <div>
+            <p>Copyright © 2021 Jimmy 'Bang Koboi'</p>
+            <p>Buatan Bandung.</p>
+          </div>
+          <AlternateEmailIcon fontSize="small" className={classes.socialMediaIcon} onClick={() => window.location.href = 'mailto:TheManHimself@jimmyganteng.com'} />
+          <HttpIcon fontSize="small" className={classes.socialMediaIcon} onClick={() => window.location.href = 'https://jimmyganteng.com'} />
+        </footer>
       </MuiThemeProvider>
-      <footer>
-        <p>Copyright © 2021 Jimmy 'Bang Koboi'</p>
-        <p>Buatan Bandung.</p>
-      </footer>
     </div>
   );
 }
