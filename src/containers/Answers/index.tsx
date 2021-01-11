@@ -7,7 +7,7 @@ import Grow from '@material-ui/core/Grow';
 import Slide from '@material-ui/core/Slide';
 
 import Chart from '../../components/chart';
-import {InvestasiModal, KreditModal} from './modals';
+import {InvestasiModal, KreditModal, Profit} from './modals';
 import {printNumber} from '../../utils/calculations';
 import {dataProps} from '../../utils/@types.calculations';
 
@@ -78,7 +78,6 @@ const Answers = ({data, handleSubmit}:Props): JSX.Element => {
   const [dimensions, setDimensions]: [any | undefined, any] = useState(initDimension);
   const [paperDimensions, setPaperDimensions]: [any | undefined, any] = useState(initDimension);
   const classes = useStyles();
-
   const handeOpen = (modal: any) => {
     setOpen(modal);
   };
@@ -119,7 +118,8 @@ const Answers = ({data, handleSubmit}:Props): JSX.Element => {
       value: printNumber(
         Math.abs(data.investData[data.investData.length - 1]),
         0
-      )
+      ),
+      button: (<Button color={data.investData[data.investData.length - 1] > 0 ? 'primary' : 'secondary'} onClick={() => handeOpen(<Profit initData={data} isShown={true} handleClose={handleClose} />)}>Detail</Button>)
     },
   ].map((val, i) => (
     <Grow in={true} timeout={1000 * (i + 1)}key={val.title}>

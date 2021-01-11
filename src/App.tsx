@@ -71,7 +71,7 @@ const App = () => {
       if (!search) {
         return;
       }
-      const newData = JSON.parse('{"' + decodeURIComponent(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
+      const newData = JSON.parse('{"' + decodeURIComponent(decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"')) + '"}');
       const {
         kredit,
         dp,
@@ -79,14 +79,17 @@ const App = () => {
         bulan,
         tahun,
         saham,
-        frekuensi
+        frekuensi,
       }:dataProps = newData;
+      const syariah = newData['syariah'] === 'true'
+      newData['syariah'] = syariah
       const lama:number = (filterNotNumber(tahun as string) + (filterNotNumber(bulan as string) / 12));
       const cashOutInterval:number = filterNotNumber(frekuensi as string);
       const input:anuitasParams = {
         kredit: filterNotNumber(kredit as string) * (1 - (filterNotNumber(dp as string) / 100)),
         bungaPerBulan: filterNotNumber(bunga as string) / 100 / 12,
         tenor: lama * 12,
+        isSyariah: syariah
       };
       const rawTickerData: dataPoint[] = loadData(saham as string);
       const tickerData: number[] = rawTickerData.slice(0, input.tenor).reverse().map((currentData: dataPoint) => currentData.changes / 100);
@@ -133,7 +136,8 @@ const App = () => {
             bulan,
             tahun,
             saham,
-            frekuensi
+            frekuensi,
+            syariah
           }:dataProps = newDataBuffer;
           const rawUrlData = {
             kredit,
@@ -142,12 +146,13 @@ const App = () => {
             bulan,
             tahun,
             saham,
-            frekuensi
+            frekuensi,
+            syariah
           };
           const url = new URL(window.location.href);
           const urlData = Object.entries(rawUrlData).map(([key, value]) => {
             url.searchParams.set(key, value);
-            return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+            return `${encodeURI(key)}=${encodeURI(value)}`;
           }).join('&');
           window.history.pushState({before: urlData}, '', url.href);
           setIsShowSocial(true);
@@ -177,7 +182,7 @@ const App = () => {
       <div className="App">
         <MuiThemeProvider theme={theme}>
           <header className="App-header">
-            <h1>Sempoa Investasi</h1>
+            <h1>{"💵🗽 Sempoa 🤑 Investasi 🏦🏠"}</h1>
             {index === 0 ? <KreditModal initDisable={false} isShown={isShow} handleSubmit={handleNext} initData={data} /> : null}
             {index === 1 ? <InvestasiModal initDisable={false} isShown={isShow} handleSubmit={handleNext} initData={data} /> : null}
             {index === 2 ? <CircularProgress /> : null}
@@ -193,14 +198,34 @@ const App = () => {
             : null}
           </header>
           <footer>
-            <LinkedInIcon fontSize="small" className={classes.socialMediaIcon} onClick={() => window.location.href = 'https://www.linkedin.com/in/faza-jimmy-hikmatullah-48bb54152/'}/>
-            <GitHubIcon fontSize="small" className={classes.socialMediaIcon} onClick={() => window.location.href = 'https://github.com/Fazatholomew'} />
+            <LinkedInIcon
+              fontSize="small"
+              className={classes.socialMediaIcon}
+              onClick={() => {
+                window.location.href = 'https://www.linkedin.com/in/faza-jimmy-hikmatullah-48bb54152/'
+              }}/>
+            <GitHubIcon
+              fontSize="small"
+              className={classes.socialMediaIcon}
+              onClick={() => {
+                window.location.href = 'https://github.com/Fazatholomew'
+              }}/>
             <div>
               <p>Copyright © 2021 Jimmy 'Bang Koboi'</p>
               <p>Buatan Bandung.</p>
             </div>
-            <AlternateEmailIcon fontSize="small" className={classes.socialMediaIcon} onClick={() => window.location.href = 'mailto:TheManHimself@jimmyganteng.com'} />
-            <HttpIcon fontSize="small" className={classes.socialMediaIcon} onClick={() => window.location.href = 'https://jimmyganteng.com'} />
+            <AlternateEmailIcon
+              fontSize="small"
+              className={classes.socialMediaIcon}
+              onClick={() => {
+                window.location.href = 'mailto:TheManHimself@jimmyganteng.com'
+              }}/>
+            <HttpIcon
+              fontSize="small"
+              className={classes.socialMediaIcon}
+              onClick={() => {
+                window.location.href = 'https://jimmyganteng.com'
+              }} />
           </footer>
         </MuiThemeProvider>
       </div>

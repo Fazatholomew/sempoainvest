@@ -33,6 +33,10 @@ export interface anuitasParams {
    * Tenor: 'Jumlah lama kredit',
    */
   tenor: number;
+  /**
+   * isSyariah: 'Mode syariah?',
+   */
+  isSyariah: boolean;
 
 }
 
@@ -53,6 +57,10 @@ export interface generateCreditDataParams {
    * Bulanan: 'Jumlah bayaran per bulan',
    */
   bulanan: number;
+  /**
+   * isSyariah: 'Mode syariah?',
+   */
+  isSyariah: boolean;
 
 }
 

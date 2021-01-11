@@ -97,14 +97,18 @@ const loadTickers = (): string[] => {
  * @param {object}  anuitasParams - Object of params.
  * @return {number} Cicilan per bulan.
  */
-const anuitas = ({kredit, bungaPerBulan, tenor}: anuitasParams): number => { 
+const anuitas = ({kredit, bungaPerBulan, tenor, isSyariah}: anuitasParams): number => { 
   if (bungaPerBulan === 0) {
-    return Math.floor(kredit / tenor);
+    return Math.ceil(kredit / tenor);
+  }
+  if (isSyariah) {
+    const bunga:number = bungaPerBulan * tenor * kredit;
+    return Math.ceil((kredit + bunga) / tenor);
   }
   const upper:number = kredit * bungaPerBulan;
   const exponen:number = (-1 * tenor)
   const lower:number = 1-((1 + bungaPerBulan) ** exponen);
-  return Math.floor(upper / lower); 
+  return Math.ceil(upper / lower); 
 };
 
 /**
@@ -112,13 +116,19 @@ const anuitas = ({kredit, bungaPerBulan, tenor}: anuitasParams): number => {
  * @param {object}  generateCreditDataParams - Object of params.
  * @return {array} Data setiap bulan dan bayaran per bulan.
  */
-const generateCreditData = ({kredit, bungaPerBulan, tenor, bulanan}: generateCreditDataParams): number[] => { 
+const generateCreditData = ({kredit, bungaPerBulan, tenor, bulanan, isSyariah}: generateCreditDataParams): number[] => { 
   const results:number[] = [kredit];
   let sisa:number = kredit;
+  const bunga: number = bulanan - (kredit * bungaPerBulan)
   for (let i:number = 0; i < tenor; i += 1) {
-    const currentBunga:number = sisa * bungaPerBulan;
-    const bayar:number = bulanan - currentBunga;
-    sisa -= bayar;
+    if (isSyariah) {
+      sisa -= bunga;
+      sisa = sisa < 1000 ? 0 : sisa;
+    } else {
+      const currentBunga:number = sisa * bungaPerBulan;
+      const bayar:number = bulanan - currentBunga;
+      sisa -= bayar;
+    }
     results.push(sisa);
   }
   return results;

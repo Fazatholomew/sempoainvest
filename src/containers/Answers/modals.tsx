@@ -59,6 +59,25 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'center',
       justifyContent: 'space-between',
       height: '70%'
+    },
+    profit: {
+      display: 'flex',
+      flexDirection: 'column',
+      height: '70%'
+    },
+    row: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      width: '100%',
+      marginBottom: '.05vh'
+    },
+    primary: {
+      color: theme.palette.primary.main
+    },
+    secondary: {
+      color: theme.palette.secondary.main
     }
   }),
 );
@@ -168,7 +187,7 @@ const KreditModal = ({isShown, handleClose=() => (null), handleSubmit, initDisab
                 <FormControlLabel
                   control={
                     <Switch
-                      checked={Boolean(data.syariah)}
+                      checked={data.syariah}
                       disabled={disable}
                       color="secondary"
                       name="syariah"
@@ -328,8 +347,48 @@ const SocialMediaButtons = ({isShown, handleClose, initData}: modalProps) => {
   );
 };
 
+const Profit = ({isShown, handleClose, initData}: modalProps) => {
+  const classes = useStyles();
+  return (
+    <Modal
+      aria-labelledby="transition-modal-title"
+      aria-describedby="transition-modal-description"
+      className={classes.backgroundModal}
+      open={isShown}
+      onClose={handleClose}
+      closeAfterTransition
+      BackdropComponent={Backdrop}
+      BackdropProps={{
+        timeout: 500,
+      }}
+      disableAutoFocus={true}>
+        <Fade in={isShown}>
+          <div className={classes.modal}>
+            <h2>{`Estimasi ${initData.investData[initData.investData.length - 1] > 0 ? 'Keuntungan' : 'Kerugian'}`} </h2>
+            <div className={classes.profit}>
+              <div className={classes.row}>
+                <h5>Total Pinjaman:</h5>
+                <h4 className={classes.secondary}>{printNumber(initData.bulanan * initData.lama * 12)}</h4>
+              </div>
+              <div className={classes.row}>
+                <h5>Sisa Investasi:</h5>
+                <h4 className={classes[initData.investData[initData.investData.length - 1] > 0 ? 'primary' : 'secondary']}>{printNumber(initData.investData[initData.investData.length - 1])}</h4>
+              </div>
+              <div className={classes.row}>
+                <h5>{`${initData.investData[initData.investData.length - 1] > 0 ? 'Keuntungan' : 'Kerugian'}:`}</h5>
+                <h4 className={classes[initData.investData[initData.investData.length - 1] > 0 ? 'primary' : 'secondary']}>{`${printNumber((initData.investData[initData.investData.length - 1] / (initData.bulanan * (initData.lama * 12)) * 100), 0, false)}%`}</h4>
+              </div>
+              <Button color={initData.investData[initData.investData.length - 1] > 0 ? 'primary' : 'secondary'} variant="outlined" onClick={handleClose}>Sip👌🏽</Button>
+            </div>
+          </div>
+        </Fade>
+    </Modal>
+  );
+};
+
 export {
   KreditModal,
   InvestasiModal,
-  SocialMediaButtons
+  SocialMediaButtons,
+  Profit
 };
