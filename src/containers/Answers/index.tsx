@@ -21,8 +21,9 @@ const useStyles = makeStyles((theme: Theme) =>
       textAlign: 'center',
       marginBottom: theme.spacing(3),
       color: theme.palette.text.primary,
-      backgroundColor: 'transparent',
-      alignItems: 'center'
+      backgroundColor: 'black',
+      alignItems: 'center',
+      justifyContent: 'center'
     },
     paperChart: {
       padding: theme.spacing(3),
@@ -124,14 +125,14 @@ const Answers = ({data, handleSubmit}:Props): JSX.Element => {
   ].map((val, i) => (
     <Grow in={true} timeout={1000 * (i + 1)}key={val.title}>
       <Grid item xs={4}>
-        <div 
+        <Paper 
           className={classes.paper}
           ref={paperRef}
           style={{height: paperDimensions.width * 0.618}}>
             <div className={classes.title}>{val.title}</div>
             <div className={classes.value}>{val.value}</div>
             {val.button}
-        </div>
+        </Paper>
       </Grid>
     </Grow>
   ))

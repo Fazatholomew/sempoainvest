@@ -94,12 +94,18 @@ const App = () => {
       const rawTickerData: dataPoint[] = loadData(saham as string);
       const tickerData: number[] = rawTickerData.slice(0, input.tenor).reverse().map((currentData: dataPoint) => currentData.changes / 100);
       const bulanan:number = anuitas(input);
+      console.log({...input,
+        bulanan,
+        tickerData,
+        cashOutInterval});
+      
       const {investData, marginOfError}: investDataType = generateInvestData({
         ...input,
         bulanan,
         tickerData,
         cashOutInterval
       });
+      console.log(investData);
       const kreditData: number[] = generateCreditData({
         ...input,
         bulanan
@@ -111,6 +117,7 @@ const App = () => {
       newData['lama'] = lama;
       newData['cashOutInterval'] = cashOutInterval;
       setData(newData);
+      console.log(newData);
       if (index !== 3) {
         setIsShow(true);
         setIndex(2);

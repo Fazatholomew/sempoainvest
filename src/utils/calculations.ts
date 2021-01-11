@@ -131,6 +131,7 @@ const generateCreditData = ({kredit, bungaPerBulan, tenor, bulanan, isSyariah}: 
     }
     results.push(sisa);
   }
+  
   return results;
 };
 
@@ -140,26 +141,33 @@ const generateCreditData = ({kredit, bungaPerBulan, tenor, bulanan, isSyariah}: 
  * @return {array} Data setiap bulan.
  */
 const generateInvestData = ({bulanan, tenor, cashOutInterval, tickerData}: generateInvestDataParams): investDataType => {
-  const cashOutValue =  bulanan * cashOutInterval;
+  const cashOutValue =  cashOutInterval === tenor ? 0 : bulanan * cashOutInterval;
   const kredit:number = bulanan * tenor;
   let cash:number = kredit - cashOutValue;
   let counter:number = 0;
   const marginOfError: investDataType["marginOfError"] = [[cash, cash]];
   const results:number[] = [cash];
   for (let i:number = 0; i < tenor; i += 1) {
+    console.log(`Before ${cash}`);
+    
     counter += 1;
     if (counter === cashOutInterval) {
       cash -= cashOutValue;
       counter = 0;
+      console.log(`Cash out ${cash}`);
+      
     }
     marginOfError.push([
       cash + (cash * (tickerData[i] - (0.05 * (1 + (i / tenor))))),
       cash + (cash * (tickerData[i] + (0.05 * (1 + (i / tenor))))),
     ]);
     cash += cash * tickerData[i];
+    console.log(`Final ${cash}`);
     results.push(cash);
     
   }
+  console.log({bulanan, tenor, cashOutInterval, tickerData});
+  console.log(results);
   return {
     investData: results,
     marginOfError
