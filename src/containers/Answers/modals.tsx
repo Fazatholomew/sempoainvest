@@ -112,6 +112,11 @@ const KreditModal = ({isShown, handleClose=() => (null), handleSubmit, initDisab
       }else{
         convertedData = newData
       }
+      const {analytics} = window as any
+      analytics('event', 'select_content', {
+        content_type: dataKey,
+        item_id: `${newData}`
+      });
     }
     newDataBuffer[dataKey] = convertedData;
     setData(newDataBuffer);
@@ -227,7 +232,13 @@ const InvestasiModal = ({isShown, handleClose, handleSubmit, initDisable=true, i
       }else{
         convertedData = newData
       }
+      const {analytics} = window as any
+      analytics('event', 'select_content', {
+        content_type: dataKey,
+        item_id: `${newData}`
+      });
     }
+    newDataBuffer[dataKey] = convertedData;
     newDataBuffer[dataKey] = convertedData;
     setData(newDataBuffer);
   };
@@ -298,6 +309,7 @@ const SocialMediaButtons = ({isShown, handleClose, initData}: modalProps) => {
   const lines = `Kemungkinan saya ${initData.investData[initData.investData.length - 1] > 0 ? 'untung' : 'rugi'}: ${
     printNumber(initData.investData[initData.investData.length - 1], 0)
   }\nDengan investasi di ${initData.saham}\nSempoa Investasi by Jimmy\n`
+  const {analytics} = window as any;
   return (
     <Modal
       aria-labelledby="transition-modal-title"
@@ -318,25 +330,53 @@ const SocialMediaButtons = ({isShown, handleClose, initData}: modalProps) => {
               <FacebookShareButton
                 url={window.location.href}
                 quote={lines}
-                className="Demo__some-network__share-button">
+                className="Demo__some-network__share-button"
+                onClick={() => {
+                  analytics('event', 'share', {
+                    method: 'Facebook',
+                    content_type: 'URL',
+                    content_id: window.location.search.substring(1),
+                  });
+                }}>
                 <FacebookIcon size={64} round />
               </FacebookShareButton>
               <LineShareButton
                 url={window.location.href}
                 title={lines}
-                className="Demo__some-network__share-button">
+                className="Demo__some-network__share-button"
+                onClick={() => {
+                  analytics('event', 'share', {
+                    method: 'Line',
+                    content_type: 'URL',
+                    content_id: window.location.search.substring(1),
+                  });
+                }}>
                 <LineIcon size={64} round />
               </LineShareButton>
               <TwitterShareButton
                 url={window.location.href}
                 title={lines}
-                className="Demo__some-network__share-button">
+                className="Demo__some-network__share-button"
+                onClick={() => {
+                  analytics('event', 'share', {
+                    method: 'Twitter',
+                    content_type: 'URL',
+                    content_id: window.location.search.substring(1),
+                  });
+                }}>
                 <TwitterIcon size={64} round />
               </TwitterShareButton>
               <LinkedinShareButton
                 url={window.location.href}
                 title={lines}
-                className="Demo__some-network__share-button">
+                className="Demo__some-network__share-button"
+                onClick={() => {
+                  analytics('event', 'share', {
+                    method: 'LinkedIn',
+                    content_type: 'URL',
+                    content_id: window.location.search.substring(1),
+                  });
+                }}>
                 <LinkedinIcon size={64} round />
               </LinkedinShareButton>
               <Button color="primary" variant="outlined" onClick={handleClose}>Thanks!</Button>

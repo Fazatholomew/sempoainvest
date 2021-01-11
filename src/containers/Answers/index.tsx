@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) =>
       textAlign: 'center',
       marginBottom: theme.spacing(3),
       color: theme.palette.text.primary,
-      backgroundColor: 'black',
+      backgroundColor: 'transparent',
       alignItems: 'center',
       justifyContent: 'center'
     },

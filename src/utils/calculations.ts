@@ -24,7 +24,8 @@ const printNumber = (inputValue: number, _zeros: number = 0, isPrintRp=true): st
   });
   const {smallNumber, zeros}: bigNumber = bigNumberConverter(inputValue * 10 ** (3 * _zeros));
   if (!isPrintRp) {
-    return formatter.format(inputValue).substring(3);
+    const f = new Intl.NumberFormat('id-ID');
+    return f.format(inputValue);
   }
   return `${formatter.format(smallNumber)} ${satuan[zeros]}`;
 };
@@ -148,26 +149,19 @@ const generateInvestData = ({bulanan, tenor, cashOutInterval, tickerData}: gener
   const marginOfError: investDataType["marginOfError"] = [[cash, cash]];
   const results:number[] = [cash];
   for (let i:number = 0; i < tenor; i += 1) {
-    console.log(`Before ${cash}`);
-    
     counter += 1;
     if (counter === cashOutInterval) {
       cash -= cashOutValue;
       counter = 0;
-      console.log(`Cash out ${cash}`);
-      
     }
     marginOfError.push([
       cash + (cash * (tickerData[i] - (0.05 * (1 + (i / tenor))))),
       cash + (cash * (tickerData[i] + (0.05 * (1 + (i / tenor))))),
     ]);
     cash += cash * tickerData[i];
-    console.log(`Final ${cash}`);
     results.push(cash);
     
   }
-  console.log({bulanan, tenor, cashOutInterval, tickerData});
-  console.log(results);
   return {
     investData: results,
     marginOfError

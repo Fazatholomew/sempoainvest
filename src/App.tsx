@@ -58,13 +58,16 @@ const App = () => {
     bulan: '0',
     tahun: '1',
     frekuensi: '1',
-    saham: ''
+    saham: '',
+    syariah: false
   };
   const [index, setIndex] = useState(0);
   const [data, setData] = useState(initData);
   const [isShow, setIsShow] = useState(true);
   const [isShowSocial, setIsShowSocial] = useState(false);
   const [isShare, setIsShare] = useState(false);
+  const classes = useStyles();
+  const {analytics} = window as any
   useEffect(() => {
     try {
       const search = window.location.search.substring(1);
@@ -93,19 +96,13 @@ const App = () => {
       };
       const rawTickerData: dataPoint[] = loadData(saham as string);
       const tickerData: number[] = rawTickerData.slice(0, input.tenor).reverse().map((currentData: dataPoint) => currentData.changes / 100);
-      const bulanan:number = anuitas(input);
-      console.log({...input,
-        bulanan,
-        tickerData,
-        cashOutInterval});
-      
+      const bulanan:number = anuitas(input);   
       const {investData, marginOfError}: investDataType = generateInvestData({
         ...input,
         bulanan,
         tickerData,
         cashOutInterval
       });
-      console.log(investData);
       const kreditData: number[] = generateCreditData({
         ...input,
         bulanan
@@ -116,8 +113,20 @@ const App = () => {
       newData['bulanan'] = bulanan;
       newData['lama'] = lama;
       newData['cashOutInterval'] = cashOutInterval;
+      analytics('event', 'purchase', {
+        items: [{
+          item_id: newData.saham,
+          discount: newData.bungaPerBulan * 12,
+          item_category: newData.syariah ? 'syariah' : 'conventional',
+          price: filterNotNumber(kredit as string),
+          quantity: cashOutInterval
+        }],
+        transaction_id: `${Date.now()} ${window.location.search.substring(1)}`,
+        shipping: (newData.investData[newData.investData.length - 1] / (bulanan * lama * 12)) * 100,
+        value: bulanan * lama * 12,
+        tax: dp
+      })
       setData(newData);
-      console.log(newData);
       if (index !== 3) {
         setIsShow(true);
         setIndex(2);
@@ -131,7 +140,6 @@ const App = () => {
     }
   }, [window.location.href])
   try {
-    const classes = useStyles();
     const handleNext = (inputData?: dataProps) => {
       if (inputData) {
         const newDataBuffer: dataProps = { ...data, ...inputData};
@@ -209,12 +217,18 @@ const App = () => {
               fontSize="small"
               className={classes.socialMediaIcon}
               onClick={() => {
+                analytics('event', 'join_group', {
+                  group_id: 'LinkedIn'
+                });
                 window.location.href = 'https://www.linkedin.com/in/faza-jimmy-hikmatullah-48bb54152/'
               }}/>
             <GitHubIcon
               fontSize="small"
               className={classes.socialMediaIcon}
               onClick={() => {
+                analytics('event', 'join_group', {
+                  group_id: 'Github'
+                });
                 window.location.href = 'https://github.com/Fazatholomew'
               }}/>
             <div>
@@ -225,12 +239,18 @@ const App = () => {
               fontSize="small"
               className={classes.socialMediaIcon}
               onClick={() => {
+                analytics('event', 'join_group', {
+                  group_id: 'Email'
+                });
                 window.location.href = 'mailto:TheManHimself@jimmyganteng.com'
               }}/>
             <HttpIcon
               fontSize="small"
               className={classes.socialMediaIcon}
               onClick={() => {
+                analytics('event', 'join_group', {
+                  group_id: 'Website'
+                });
                 window.location.href = 'https://jimmyganteng.com'
               }} />
           </footer>
