@@ -294,6 +294,18 @@ const InvestasiModal = ({isShown, handleClose, handleSubmit, initDisable=true, i
                   value={data.frekuensi}
                 />
               </Grid>
+              {data.data ? <Grid item xs={12}>
+                <div className={classes.profit}>
+                  <div className={classes.row}>
+                    <h5>Rata-Rata Kenaikan Per Bulan:</h5>
+                    <h4 className={classes.primary}>{`${printNumber(data.data.Average, 0, false)}%`}</h4>
+                  </div>
+                  <div className={classes.row}>
+                    <h5>Volatility:</h5>
+                    <h4 className={classes.primary}>{`+- ${printNumber(data.data.Volatility, 0, false)}%`}</h4>
+                  </div>
+                </div>
+              </Grid> : null}
               <Grid item xs={12}>
                 <Button color="primary" onClick={disable ? handleDisable : () => submit(data)}>{disable ? 'Edit' : 'Enter'}</Button>
               </Grid>

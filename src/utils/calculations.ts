@@ -6,7 +6,8 @@ import {
   generateCreditDataParams,
   generateInvestDataParams,
   bigNumber,
-  investDataType
+  investDataType,
+  tickerDataProps
 } from './@types.calculations';
 
 const satuan: string[] = ['', 'Ribu', 'Juta', 'Milyar', 'Triliun', 'Kuadriliun', 'Kuantiliun', 'Sekstiliun']
@@ -79,8 +80,8 @@ const bigNumberConverter = (inputNumber: number, zeros: number | null=null): big
  * @param {string}  ticker - Saham Investasi.
  * @return {array} Data Saham Investasi.
  */
-const loadData = (ticker: string): dataPoint[] => {
-  const data:allData = jsonData;
+const loadData = (ticker: string): tickerDataProps => {
+  const data:any = jsonData;
   return data[ticker];
 };
 
@@ -89,7 +90,7 @@ const loadData = (ticker: string): dataPoint[] => {
  * @return {array} All tickers.
  */
 const loadTickers = (): string[] => {
-  const data:allData = jsonData;
+  const data:any = jsonData;
     return Object.keys(data);
 };
 
@@ -146,8 +147,11 @@ const generateInvestData = ({bulanan, tenor, cashOutInterval, tickerData}: gener
   const kredit:number = bulanan * tenor;
   let cash:number = kredit - cashOutValue;
   let counter:number = 0;
+  const marginOfErrorData = tenor + 1 > tickerData['Data Length'] ? tickerData.Data['Margin of Error'] : tickerData.Data['Margin of Error'].reverse().slice(0, tenor + 1).reverse();
+  const changesData = tenor + 1 > tickerData['Data Length'] ? tickerData.Data.Changes : tickerData.Data.Changes.reverse().slice(0, tenor + 1).reverse();
   const marginOfError: investDataType["marginOfError"] = [[cash, cash]];
   const results:number[] = [cash];
+  console.log(marginOfErrorData);
   for (let i:number = 0; i < tenor; i += 1) {
     counter += 1;
     if (counter === cashOutInterval) {
@@ -155,10 +159,10 @@ const generateInvestData = ({bulanan, tenor, cashOutInterval, tickerData}: gener
       counter = 0;
     }
     marginOfError.push([
-      cash + (cash * (tickerData[i] - (0.05 * (1 + (i / tenor))))),
-      cash + (cash * (tickerData[i] + (0.05 * (1 + (i / tenor))))),
+      cash + (cash * (marginOfErrorData[i % tickerData['Data Length']][0] / 100 * (i / tenor * 5))),
+      cash + (cash * (marginOfErrorData[i % tickerData['Data Length']][1] / 100 * (i / tenor * 5))),
     ]);
-    cash += cash * tickerData[i];
+    cash += cash * (changesData[i % tickerData['Data Length']] / 100);
     results.push(cash);
     
   }

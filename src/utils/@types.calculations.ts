@@ -5,6 +5,16 @@ export interface loadDataParams {
   ticker: 'string'
 }
 
+export interface tickerDataProps {
+  Average: number;
+  Volatility: number;
+  "Data Length": number;
+  Data: {
+    Changes: number[];
+    "Margin of Error": [number, number][]
+  }
+}
+
 export interface dataPoint {
   /**
    * date: 'Tanggal Data point',
@@ -17,7 +27,7 @@ export interface dataPoint {
 }
 
 export interface allData {
-  [key: string]: dataPoint[];
+  [key: string]: tickerDataProps;
 }
 
 export interface anuitasParams {
@@ -84,7 +94,7 @@ export interface generateInvestDataParams {
   /**
    * Ticker: 'Data Saham investasi',
    */
-  tickerData: number[];
+  tickerData: tickerDataProps;
 
 }
 

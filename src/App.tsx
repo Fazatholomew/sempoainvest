@@ -19,7 +19,8 @@ import {
   dataProps,
   dataPoint,
   anuitasParams,
-  investDataType
+  investDataType,
+  tickerDataProps
 } from './utils/@types.calculations';
 
 const theme = createMuiTheme({
@@ -94,13 +95,12 @@ const App = () => {
         tenor: lama * 12,
         isSyariah: syariah
       };
-      const rawTickerData: dataPoint[] = loadData(saham as string);
-      const tickerData: number[] = rawTickerData.slice(0, input.tenor).reverse().map((currentData: dataPoint) => currentData.changes / 100);
+      const rawTickerData: tickerDataProps = loadData(saham as string);
       const bulanan:number = anuitas(input);   
       const {investData, marginOfError}: investDataType = generateInvestData({
         ...input,
         bulanan,
-        tickerData,
+        tickerData: rawTickerData,
         cashOutInterval
       });
       const kreditData: number[] = generateCreditData({
@@ -113,6 +113,7 @@ const App = () => {
       newData['bulanan'] = bulanan;
       newData['lama'] = lama;
       newData['cashOutInterval'] = cashOutInterval;
+      newData['data'] = rawTickerData
       analytics('event', 'purchase', {
         items: [{
           item_id: newData.saham,
