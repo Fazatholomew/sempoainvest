@@ -125,14 +125,14 @@ const Answers = ({data, handleSubmit}:Props): JSX.Element => {
   ].map((val, i) => (
     <Grow in={true} timeout={1000 * (i + 1)}key={val.title}>
       <Grid item xs={4}>
-        <Paper 
+        <div 
           className={classes.paper}
           ref={paperRef}
-          style={{height: paperDimensions.width * 0.618}}>
+          style={{height: paperDimensions.width * 0.1}}>
             <div className={classes.title}>{val.title}</div>
             <div className={classes.value}>{val.value}</div>
             {val.button}
-        </Paper>
+        </div>
       </Grid>
     </Grow>
   ))
