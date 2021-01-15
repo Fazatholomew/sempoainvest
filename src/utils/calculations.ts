@@ -159,8 +159,8 @@ const generateInvestData = ({bulanan, tenor, cashOutInterval, tickerData}: gener
       counter = 0;
     }
     marginOfError.push([
-      cash + (cash * (marginOfErrorData[i % tickerData['Data Length']][0] / 100 * (i / tenor * 5))),
-      cash + (cash * (marginOfErrorData[i % tickerData['Data Length']][1] / 100 * (i / tenor * 5))),
+      cash + (cash * ((changesData[i % tickerData['Data Length']] / 100) + (marginOfErrorData[i % tickerData['Data Length']][0] / 100 * (i / tenor * (tenor / 12))))),
+      cash + (cash * ((changesData[i % tickerData['Data Length']] / 100) + (marginOfErrorData[i % tickerData['Data Length']][1] / 100 * (i / tenor * (tenor / 12))))),
     ]);
     cash += cash * (changesData[i % tickerData['Data Length']] / 100);
     results.push(cash);
