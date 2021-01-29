@@ -1,7 +1,7 @@
 {
-  "name": "ic",
-  "version": "0.1.0",
-  "private": true,
+  "name": "SempoaInvest",
+  "version": "1.0.0",
+  "private": false,
   "dependencies": {
     "@material-ui/core": "^4.11.2",
     "@material-ui/icons": "^4.11.2",
