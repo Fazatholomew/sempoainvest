@@ -45,6 +45,7 @@
 <p>In a spirit of informing Indonesian people about investment and the leverage of money, this project provides an investment calculator. However, this is not an ordinary investment calculator. The idea is, instead of buying something for cash (e.g a $25,000 car), you can take a loan or installment with interest. While paying the debt, since you already have the cash, you can invest that money into some investment vehicle (e.g stocks). How about paying the installment? Well, you can withdraw the investment regularly to pay the installment. So, when you finish the payments, the hope is that you will not only get the car, but also some money left in the investment. However, What if I lose money due to interest or the downfall of the stock market? That is why this calculator is built.<p>
 <br>
 <br>
+
 The calculator does not only calculate how much is the installment, profit, and total payment, but also simulates the investment should you choose a certain investment vehicle. However, a huge side note, **this is only an estimation based on historical price data from** [Yahoo Finance](https://finance.yahoo.com/). More details later. For a starter, the website only supports **Bahasa**.
 
 <br>
