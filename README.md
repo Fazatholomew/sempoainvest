@@ -1,46 +1,89 @@
-# Getting Started with Create React App
+<!-- PROJECT LOGO -->
+<br />
+<p align="center">
+  <a href="https://investasi.jimmyganteng.com">
+    <h1 align="center">💸</h1>
+  </a>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+  <h3 align="center">Sempoa Investasi</h3>
 
-## Available Scripts
+  <p align="center">
+    Multitask Your Loan and Investment
+    <br />
+    <a href="https://investasi.jimmyganteng.com"><strong>Tell your money to work for you »</strong></a>
+    <br />
+    <br />
+  </p>
+</p>
 
-In the project directory, you can run:
 
-### `yarn start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+<!-- TABLE OF CONTENTS -->
+<details open="open">
+  <summary><h2 style="display: inline-block">Table of Contents</h2></summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+        <li><a href="#data">Data</a></li>
+        <li><a href="#calculation">Calculation</a></li>
+      </ul>
+    </li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ol>
+</details>
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
 
-### `yarn test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+<!-- ABOUT THE PROJECT -->
+## About The Project
 
-### `yarn build`
+[![Product Name Screen Shot](images/screenshot.gif)](https://investasi.jimmyganteng.com)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+<p>In a spirit of informing Indonesian people about investment and the leverage of money, this project provides an investment calculator. However, this is not an ordinary investment calculator. The idea is, instead of buying something for cash (e.g a $25,000 car), you can take a loan or installment with interest. While paying the debt, since you already have the cash, you can invest that money into some investment vehicle (e.g stocks). How about paying the installment? Well, you can withdraw the investment regularly to pay the installment. So, when you finish the payments, the hope is that you will not only get the car, but also some money left in the investment. However, What if I lose money due to interest or the downfall of the stock market? That is why this calculator is built.<p>
+<br>
+<br>
+The calculator does not only calculate how much is the installment, profit, and total payment, but also simulates the investment should you choose a certain investment vehicle. However, a huge side note, **this is only an estimation based on historical price data from** [Yahoo Finance](https://finance.yahoo.com/). More details later. For a starter, the website only supports **Bahasa**.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+<br>
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Built With
 
-### `yarn eject`
+<p float="left">
+  <img src="images/react.png" alt="React JS" width="100"/>
+  <img src="images/ts.svg" alt="TypeScript" width="100"/>
+  <img src="images/material.png" alt="Material UI" width="100"/>
+</p>
+<p>
+  <img src="images/pandas_white.svg" alt="Pandas" width="100"/>
+  <img src="images/jupyter.svg" alt="Jupyter" width="100"/>
+  <img src="images/python.png" alt="Python" width="100""/>
+</p>
+<br>
+<br>
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### Data
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Full documentation of the data analysis can be seen [here](https://jimmyganteng.com/Analysis.html).
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+<br>
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### Calculation
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+For calculating the loan and installment, there are two modes of calculation: conventional and sharia. While the conventional using the compound interest, whereas the sharia only uses simple interest.
+<br>
+For calculating the investment, each value is calculated using the historical prices from above analysis.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Usage
+
+The manuals about terms inside the calculator can be accessed here in my [YouTube Channel's blog](https://kitangoding.jimmyganteng.com/sempoa_investasi). Only supports Bahasa.
+
+
+
+<!-- CONTACT -->
+## Leave me a note?
+
+Jimmy Hikmatullah - [LinkedIn](https://www.linkedin.com/in/faza-jimmy-hikmatullah-48bb54152/) - [Email](mailto:themanhimself@jimmyganteng.com)
