@@ -430,7 +430,7 @@ const Profit = ({isShown, handleClose, initData}: modalProps) => {
                 <h5>{`${initData.investData[initData.investData.length - 1] > 0 ? 'Keuntungan' : 'Kerugian'}:`}</h5>
                 <h4 className={classes[initData.investData[initData.investData.length - 1] > 0 ? 'primary' : 'secondary']}>{`${printNumber((initData.investData[initData.investData.length - 1] / (initData.bulanan * (initData.lama * 12)) * 100), 0, false)}%`}</h4>
               </div>
-              <Button color={initData.investData[initData.investData.length - 1] > 0 ? 'primary' : 'secondary'} variant="outlined" onClick={() => {window.location.href = 'https://kitangoding.jimmyganteng.com/sempoa_investasi'}}>👌🏽 Tutorial & Penjelasan 👌🏽</Button>
+              <Button color={initData.investData[initData.investData.length - 1] > 0 ? 'primary' : 'secondary'} variant="outlined" onClick={() => {window.location.href = 'https://kitangoding.jimmyganteng.com/blog/sempoa_investasi'}}>👌🏽 Tutorial & Penjelasan 👌🏽</Button>
             </div>
           </div>
         </Fade>
